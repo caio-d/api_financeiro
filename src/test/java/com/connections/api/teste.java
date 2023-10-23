@@ -1,7 +1,7 @@
-package com.connections.connection;
+package com.connections.api;
 
-import com.connections.connection.ContaController.ContaResponse;
-import com.connections.connection.ContaController.Conta;
+import com.connections.api.conta.ContaResponse;
+import com.connections.api.conta.Conta;
 
 public class teste {
 

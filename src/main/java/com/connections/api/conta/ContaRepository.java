@@ -1,4 +1,4 @@
-package com.connections.connection.ContaController;
+package com.connections.api.conta;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

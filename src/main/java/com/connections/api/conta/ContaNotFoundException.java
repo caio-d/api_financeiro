@@ -1,4 +1,4 @@
-package com.connections.connection.ContaController;
+package com.connections.api.conta;
 
 public class ContaNotFoundException extends RuntimeException  {
 

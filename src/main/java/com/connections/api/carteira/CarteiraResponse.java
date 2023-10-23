@@ -1,4 +1,4 @@
-package com.connections.connection.controllers.CarteiraController;
+package com.connections.api.carteira;
 
 import lombok.NonNull;
 import java.time.LocalDate;

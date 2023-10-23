@@ -1,4 +1,4 @@
-package com.connections.connection.ContaController;
+package com.connections.api.conta;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

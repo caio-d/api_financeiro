@@ -1,13 +1,13 @@
-package com.connections.connection;
+package com.connections.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ConnectionApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConnectionApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }
