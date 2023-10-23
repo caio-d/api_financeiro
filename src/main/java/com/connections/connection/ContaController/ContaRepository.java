@@ -1,6 +1,5 @@
-package com.connections.connection.Controllers;
+package com.connections.connection.ContaController;
 
-import com.connections.connection.conta.Conta;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ContaRepository extends JpaRepository<Conta, Long> {
