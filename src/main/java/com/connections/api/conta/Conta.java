@@ -3,17 +3,17 @@ package com.connections.api.conta;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Table(name = "conta")
+@Table(name = "tb_conta")
 @Entity(name = "conta")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "conta_id")
 public class Conta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long conta_id;
 
     private String nome;
 
@@ -21,10 +21,13 @@ public class Conta {
 
     private Double divida;
 
-    public Conta(ContaResponse contaDTO) {
-        this.nome = contaDTO.nome();
-        this.saldo = contaDTO.saldo();
-        this.divida = contaDTO.divida();
+    private String email;
+
+    public Conta(ContaResponse contaResponse) {
+        this.nome = contaResponse.nome();
+        this.saldo = contaResponse.saldo();
+        this.divida = contaResponse.divida();
+        this.email = contaResponse.email();
     }
 
 }

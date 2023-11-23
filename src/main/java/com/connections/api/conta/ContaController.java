@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/conta")
 public class ContaController {
 
@@ -18,8 +19,8 @@ public class ContaController {
     // de objetos que sua classe depende.
 
     @PostMapping
-    public void insertConta(@RequestBody ContaResponse contaDTO) {
-        repository.save(new Conta(contaDTO));
+    public void insertConta(@RequestBody ContaResponse contaResponse) {
+        repository.save(new Conta(contaResponse));
     }
 
     @GetMapping
@@ -27,32 +28,33 @@ public class ContaController {
         return repository.findAll().stream().map(ContaResponse::new).toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Conta> getOne(@PathVariable Long id) {
-        Conta conta = repository.findById(id)
-                .orElseThrow(() -> new ContaNotFoundException("Conta não encontrada com o ID: " + id));
+    @GetMapping("/{conta_id}")
+    public ResponseEntity<Conta> getOne(@PathVariable Long conta_id) {
+        Conta conta = repository.findById(conta_id)
+                .orElseThrow(() -> new ContaNotFoundException("Conta não encontrada com o ID: " + conta_id));
         return ResponseEntity.ok(conta);
     }
 
     @DeleteMapping
-    public void deleteContaById(Long id) {
-        repository.deleteById(id);
+    public void deleteContaById(Long conta_id) {
+        repository.deleteById(conta_id);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<ContaResponse> updateConta(@PathVariable Long id, @RequestBody ContaResponse contaDTO) {
+    @PutMapping("{conta_id}")
+    public ResponseEntity<ContaResponse> updateConta(@PathVariable Long conta_id, @RequestBody ContaResponse contaResponse) {
 
-        Conta conta = repository.findById(id).orElse(null);
+        Conta conta = repository.findById(conta_id).orElse(null);
 
         if (conta != null) {
 
-            conta.setNome(contaDTO.nome());
-            conta.setSaldo(contaDTO.saldo());
-            conta.setDivida(contaDTO.divida());
+            conta.setNome(contaResponse.nome());
+            conta.setSaldo(contaResponse.saldo());
+            conta.setDivida(contaResponse.divida());
+            conta.setEmail(contaResponse.email());
 
             repository.save(conta);
 
-            return ResponseEntity.ok(contaDTO);
+            return ResponseEntity.ok(contaResponse);
         }
 
         return ResponseEntity.notFound().build();

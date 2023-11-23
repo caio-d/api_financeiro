@@ -4,17 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
-@Table(name = "carteira")
+@Table(name = "tb_carteira")
 @Entity(name = "carteira")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "carteira_id")
 public class Carteira {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long carteira_id;
 
     @NonNull
     private Long conta_id;
@@ -29,6 +29,8 @@ public class Carteira {
 
     private LocalDate vencimento;
 
+    private Long meses_restantes;
+
     public Carteira(CarteiraResponse carteiraResponse) {
         this.conta_id = carteiraResponse.conta_id();
         this.tipo = carteiraResponse.tipo();
@@ -36,6 +38,7 @@ public class Carteira {
         this.saldo = carteiraResponse.saldo();
         this.divida = carteiraResponse.divida();
         this.vencimento = carteiraResponse.vencimento();
+        this.meses_restantes = carteiraResponse.meses_restantes();
     }
 
 }

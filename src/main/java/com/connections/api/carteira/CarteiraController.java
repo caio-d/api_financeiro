@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/carteira")
 public class CarteiraController {
 
@@ -22,30 +23,32 @@ public class CarteiraController {
         return repository.findAll().stream().map(CarteiraResponse::new).toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Carteira> getOne(@PathVariable Long id) {
-        Carteira carteira = repository.findById(id)
-                .orElseThrow(() -> new CarteiraNotFoundException("Carteira não encontrada com o ID: " + id));
+    @GetMapping("/{carteira_id}")
+    public ResponseEntity<Carteira> getOne(@PathVariable Long carteira_id) {
+        Carteira carteira = repository.findById(carteira_id)
+                .orElseThrow(() -> new CarteiraNotFoundException("Carteira não encontrada com o ID: " + carteira_id));
         return ResponseEntity.ok(carteira);
     }
 
     @DeleteMapping
-    public void deleteContaById(Long id) {
-        repository.deleteById(id);
+    public void deleteContaById(Long carteira_id) {
+        repository.deleteById(carteira_id);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<CarteiraResponse> updateCarteira(@PathVariable Long id, @RequestBody CarteiraResponse carteiraResponse) {
+    @PutMapping("{carteira_id}")
+    public ResponseEntity<CarteiraResponse> updateCarteira(@PathVariable Long carteira_id, @RequestBody CarteiraResponse carteiraResponse) {
 
-        Carteira carteira = repository.findById(id).orElse(null);
+        Carteira carteira = repository.findById(carteira_id).orElse(null);
 
         if (carteira != null) {
 
+            carteira.setConta_id(carteiraResponse.conta_id());
             carteira.setNome(carteiraResponse.nome());
             carteira.setTipo(carteiraResponse.tipo());
             carteira.setSaldo(carteiraResponse.saldo());
             carteira.setDivida(carteiraResponse.divida());
             carteira.setVencimento(carteiraResponse.vencimento());
+            carteira.setMeses_restantes(carteiraResponse.meses_restantes());
 
             repository.save(carteira);
 

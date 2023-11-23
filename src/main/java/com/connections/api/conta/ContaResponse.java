@@ -2,14 +2,10 @@ package com.connections.api.conta;
 
 import lombok.NonNull;
 
-
-public record ContaResponse(Long id, String nome, Double saldo, Double divida) {
-
-    // record cria getter, setter, construtor, etc
-    // usado majoritariamente para itens de transferencia de dados
+public record ContaResponse(Long id, String nome, Double saldo, Double divida, String email) {
 
     public ContaResponse(@NonNull Conta conta) {
-        this(conta.getId(), conta.getNome(), conta.getSaldo(), conta.getDivida());
+        this(conta.getConta_id(), conta.getNome(), conta.getSaldo(), conta.getDivida(), conta.getEmail());
     }
 
 }
