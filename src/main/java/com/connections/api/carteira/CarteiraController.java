@@ -25,8 +25,7 @@ public class CarteiraController {
 
     @GetMapping("/{carteira_id}")
     public ResponseEntity<Carteira> getOne(@PathVariable Long carteira_id) {
-        Carteira carteira = repository.findById(carteira_id)
-                .orElseThrow(() -> new CarteiraNotFoundException("Carteira não encontrada com o ID: " + carteira_id));
+        Carteira carteira = repository.findById(carteira_id).orElseThrow(() -> new CarteiraNotFoundException("Carteira não encontrada com o ID: " + carteira_id));
         return ResponseEntity.ok(carteira);
     }
 
