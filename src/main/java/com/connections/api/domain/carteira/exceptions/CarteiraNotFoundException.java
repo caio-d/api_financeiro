@@ -1,4 +1,4 @@
-package com.connections.api.carteira;
+package com.connections.api.domain.carteira.exceptions;
 
 public class CarteiraNotFoundException extends RuntimeException  {
 

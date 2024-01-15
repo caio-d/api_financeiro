@@ -1,5 +1,9 @@
-package com.connections.api.conta;
+package com.connections.api.controllers;
 
+import com.connections.api.domain.conta.Conta;
+import com.connections.api.domain.conta.exceptions.ContaNotFoundException;
+import com.connections.api.repositories.ContaRepository;
+import com.connections.api.domain.conta.ContaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

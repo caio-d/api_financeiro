@@ -1,4 +1,4 @@
-package com.connections.api.conta;
+package com.connections.api.domain.conta.exceptions;
 
 public class ContaNotFoundException extends RuntimeException  {
 

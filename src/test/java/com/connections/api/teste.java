@@ -1,7 +1,7 @@
 package com.connections.api;
 
-import com.connections.api.conta.ContaResponse;
-import com.connections.api.conta.Conta;
+import com.connections.api.domain.conta.ContaResponse;
+import com.connections.api.domain.conta.Conta;
 
 public class teste {
 

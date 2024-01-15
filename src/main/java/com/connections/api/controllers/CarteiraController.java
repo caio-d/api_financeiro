@@ -1,5 +1,9 @@
-package com.connections.api.carteira;
+package com.connections.api.controllers;
 
+import com.connections.api.domain.carteira.Carteira;
+import com.connections.api.domain.carteira.exceptions.CarteiraNotFoundException;
+import com.connections.api.repositories.CarteiraRepository;
+import com.connections.api.domain.carteira.CarteiraResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
