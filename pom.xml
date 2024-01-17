@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.4</version>
+		<version>3.2.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.connections</groupId>
 	<artifactId>connection</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>connection</name>
-	<description>minha coisa ai :D</description>
+	<description>api :D</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

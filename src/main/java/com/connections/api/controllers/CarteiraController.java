@@ -1,14 +1,13 @@
 package com.connections.api.controllers;
 
 import com.connections.api.domain.carteira.Carteira;
-import com.connections.api.domain.carteira.exceptions.CarteiraNotFoundException;
-import com.connections.api.repositories.CarteiraRepository;
 import com.connections.api.domain.carteira.CarteiraResponse;
 import com.connections.api.testeImplementacao.CarteiraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -23,43 +22,33 @@ public class CarteiraController {
         this.carteiraService = carteiraService;
     }
 
-    @Autowired
-    private CarteiraRepository repository;
-
-    @GetMapping("/{carteira_id}")
-    public ResponseEntity<Carteira> getByIdImplementada(@PathVariable Long carteira_id) {
-        Carteira carteira = carteiraService.findById(carteira_id).orElseThrow(() -> new CarteiraNotFoundException("Carteira não mamada com o ID: " + carteira_id));
-        return ResponseEntity.ok(carteira);
-    }
-
     @PostMapping
-    public ResponseEntity<CarteiraResponse> insertCarteira(@RequestBody CarteiraResponse carteiraResponse) {
-        repository.save(new Carteira(carteiraResponse));
+    public ResponseEntity<CarteiraResponse> insert(@RequestBody CarteiraResponse carteiraResponse) {
+        carteiraService.save(new Carteira(carteiraResponse));
         return ResponseEntity.ok().body(carteiraResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<CarteiraResponse>> getAll() {
-        List<CarteiraResponse> carteira = repository.findAll().stream().map(CarteiraResponse::new).toList();
-        return ResponseEntity.ok().body(carteira);
+        return ResponseEntity.ok().body(carteiraService.getAll());
     }
 
-//    @GetMapping("/{carteira_id}")
-//    public ResponseEntity<Carteira> getById(@PathVariable Long carteira_id) {
-//        Carteira carteira = repository.findById(carteira_id).orElseThrow(() -> new CarteiraNotFoundException("Carteira não encontrada com o ID: " + carteira_id));
-//        return ResponseEntity.ok(carteira);
-//    }
+    @GetMapping("/{carteira_id}")
+    public ResponseEntity<Carteira> getById(@PathVariable Long carteira_id) {
+        Optional<Carteira> carteira = carteiraService.findById(carteira_id);
+        return ResponseEntity.ok(carteira.orElseThrow());
+    }
 
     @DeleteMapping
-    public ResponseEntity<CarteiraResponse> deleteContaById(Long carteira_id) {
-        repository.deleteById(carteira_id);
+    public ResponseEntity<CarteiraResponse> deleteById(Long carteira_id) {
+        carteiraService.deleteById(carteira_id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{carteira_id}")
-    public ResponseEntity<CarteiraResponse> updateCarteira(@PathVariable Long carteira_id, @RequestBody CarteiraResponse carteiraResponse) {
+    public ResponseEntity<CarteiraResponse> updateById(@PathVariable Long carteira_id, @RequestBody CarteiraResponse carteiraResponse) {
 
-        Carteira carteira = repository.findById(carteira_id).orElse(null);
+        Carteira carteira = carteiraService.findById(carteira_id).orElse(null);
 
         if (carteira != null) {
 
@@ -69,7 +58,7 @@ public class CarteiraController {
             if (carteiraResponse.vencimento() != null) carteira.setVencimento(carteiraResponse.vencimento());
             if (carteiraResponse.meses_restantes() != null) carteira.setMeses_restantes(carteiraResponse.meses_restantes());
 
-            repository.save(carteira);
+            carteiraService.save(carteira);
 
             return ResponseEntity.ok(carteiraResponse);
         }
