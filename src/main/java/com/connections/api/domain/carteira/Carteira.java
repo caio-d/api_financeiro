@@ -15,25 +15,16 @@ public class Carteira {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long carteira_id;
-
     @NonNull
     private Long conta_id;
-
     private String nome;
-
-    private String tipo;
-
     private Double saldo;
-
     private Double divida;
-
     private LocalDate vencimento;
-
     private Long meses_restantes;
 
     public Carteira(CarteiraResponse carteiraResponse) {
         this.conta_id = carteiraResponse.conta_id();
-        this.tipo = carteiraResponse.tipo();
         this.nome = carteiraResponse.nome();
         this.saldo = carteiraResponse.saldo();
         this.divida = carteiraResponse.divida();

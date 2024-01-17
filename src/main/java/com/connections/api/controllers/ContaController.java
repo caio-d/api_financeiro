@@ -15,12 +15,8 @@ import java.util.List;
 @RequestMapping("/conta")
 public class ContaController {
 
-    // repositoy é o JPA
-
     @Autowired
     private ContaRepository repository;
-    // autowired -> remove a necessidade de criar manualmente instâncias
-    // de objetos que sua classe depende.
 
     @PostMapping
     public void insertConta(@RequestBody ContaResponse contaResponse) {
@@ -28,20 +24,22 @@ public class ContaController {
     }
 
     @GetMapping
-    public List<ContaResponse> getAll() {
-        return repository.findAll().stream().map(ContaResponse::new).toList();
+    public ResponseEntity<List<ContaResponse>> getAll() {
+        List<ContaResponse> contas = repository.findAll().stream().map(ContaResponse::new).toList();
+        return ResponseEntity.ok().body(contas);
     }
 
     @GetMapping("/{conta_id}")
-    public ResponseEntity<Conta> getOne(@PathVariable Long conta_id) {
+    public ResponseEntity<Conta> getById(@PathVariable Long conta_id) {
         Conta conta = repository.findById(conta_id)
                 .orElseThrow(() -> new ContaNotFoundException("Conta não encontrada com o ID: " + conta_id));
         return ResponseEntity.ok(conta);
     }
 
     @DeleteMapping
-    public void deleteContaById(Long conta_id) {
+    public ResponseEntity<ContaResponse> deleteContaById(Long conta_id) {
         repository.deleteById(conta_id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{conta_id}")
@@ -51,10 +49,10 @@ public class ContaController {
 
         if (conta != null) {
 
-            conta.setNome(contaResponse.nome());
-            conta.setSaldo(contaResponse.saldo());
-            conta.setDivida(contaResponse.divida());
-            conta.setEmail(contaResponse.email());
+            if (contaResponse.nome().isEmpty()) conta.setNome(contaResponse.nome());
+            if (contaResponse.saldo() != null) conta.setSaldo(contaResponse.saldo());
+            if (contaResponse.divida() != null) conta.setDivida(contaResponse.divida());
+            if (contaResponse.email().isEmpty()) conta.setEmail(contaResponse.email());
 
             repository.save(conta);
 

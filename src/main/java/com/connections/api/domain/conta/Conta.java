@@ -14,13 +14,9 @@ public class Conta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long conta_id;
-
     private String nome;
-
     private Double saldo;
-
     private Double divida;
-
     private String email;
 
     public Conta(ContaResponse contaResponse) {
