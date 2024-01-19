@@ -1,51 +1,56 @@
 package com.connections.api.controllers;
 
+import com.connections.api.domain.carteira.Carteira;
+import com.connections.api.domain.carteira.CarteiraResponse;
 import com.connections.api.domain.conta.Conta;
 import com.connections.api.domain.conta.exceptions.ContaNotFoundException;
-import com.connections.api.repositories.ContaRepository;
 import com.connections.api.domain.conta.ContaResponse;
+import com.connections.api.services.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/conta")
 public class ContaController {
 
+    private final ContaService service;
     @Autowired
-    private ContaRepository repository;
+    public ContaController(ContaService repository) {
+        this.service = repository;
+    }
 
     @PostMapping
-    public void insertConta(@RequestBody ContaResponse contaResponse) {
-        repository.save(new Conta(contaResponse));
+    public ResponseEntity<ContaResponse> insert(@RequestBody ContaResponse contaResponse) {
+        service.save(new Conta(contaResponse));
+        return ResponseEntity.ok().body(contaResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ContaResponse>> getAll() {
-        List<ContaResponse> contas = repository.findAll().stream().map(ContaResponse::new).toList();
-        return ResponseEntity.ok().body(contas);
+        return ResponseEntity.ok().body(service.getAll());
     }
 
-    @GetMapping("/{conta_id}")
-    public ResponseEntity<Conta> getById(@PathVariable Long conta_id) {
-        Conta conta = repository.findById(conta_id)
-                .orElseThrow(() -> new ContaNotFoundException("Conta não encontrada com o ID: " + conta_id));
-        return ResponseEntity.ok(conta);
+    @GetMapping("/{id}")
+    public ResponseEntity<Conta> getById(@PathVariable Long id) {
+        Optional<Conta> conta = service.findById(id);
+        return ResponseEntity.ok(conta.orElseThrow());
     }
 
-    @DeleteMapping
-    public ResponseEntity<ContaResponse> deleteContaById(Long conta_id) {
-        repository.deleteById(conta_id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ContaResponse> deleteById(@PathVariable Long id) {
+        service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("{conta_id}")
-    public ResponseEntity<ContaResponse> updateConta(@PathVariable Long conta_id, @RequestBody ContaResponse contaResponse) {
+    @PatchMapping("{id}")
+    public ResponseEntity<ContaResponse> updateConta(@PathVariable Long id, @RequestBody ContaResponse contaResponse) {
 
-        Conta conta = repository.findById(conta_id).orElse(null);
+        Conta conta = service.findById(id).orElse(null);
 
         if (conta != null) {
 
@@ -54,8 +59,28 @@ public class ContaController {
             if (contaResponse.divida() != null) conta.setDivida(contaResponse.divida());
             if (contaResponse.email().isEmpty()) conta.setEmail(contaResponse.email());
 
-            repository.save(conta);
+            service.save(conta);
 
+            return ResponseEntity.ok(contaResponse);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<ContaResponse> put(@PathVariable Long id, @RequestBody ContaResponse contaResponse) {
+
+        Conta conta = service.findById(id).orElse(null);
+
+        if (conta != null && !contaResponse.nome().isEmpty() && contaResponse.saldo() != null && contaResponse.divida() != null &&
+                !contaResponse.email().isEmpty()) {
+
+            conta.setNome(contaResponse.nome());
+            conta.setSaldo(contaResponse.saldo());
+            conta.setDivida(contaResponse.divida());
+            conta.setEmail(contaResponse.email());
+
+            service.save(conta);
             return ResponseEntity.ok(contaResponse);
         }
 
