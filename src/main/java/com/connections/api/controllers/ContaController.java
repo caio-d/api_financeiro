@@ -1,11 +1,9 @@
 package com.connections.api.controllers;
 
-import com.connections.api.domain.carteira.Carteira;
-import com.connections.api.domain.carteira.CarteiraResponse;
 import com.connections.api.domain.conta.Conta;
-import com.connections.api.domain.conta.exceptions.ContaNotFoundException;
 import com.connections.api.domain.conta.ContaResponse;
 import com.connections.api.services.ContaService;
+import com.connections.api.utils.ContaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,26 +17,28 @@ import java.util.Optional;
 public class ContaController {
 
     private final ContaService service;
+
     @Autowired
     public ContaController(ContaService repository) {
         this.service = repository;
     }
 
     @PostMapping
-    public ResponseEntity<ContaResponse> insert(@RequestBody ContaResponse contaResponse) {
-        service.save(new Conta(contaResponse));
-        return ResponseEntity.ok().body(contaResponse);
+    public ResponseEntity<Conta> insert(@RequestBody ContaResponse contaResponse) {
+        Conta conta = new Conta(contaResponse);
+        service.save(conta);
+        return ResponseEntity.ok().body(conta);
     }
 
     @GetMapping
-    public ResponseEntity<List<ContaResponse>> getAll() {
+    public ResponseEntity<List<Conta>> getAll() {
         return ResponseEntity.ok().body(service.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Conta> getById(@PathVariable Long id) {
-        Optional<Conta> conta = service.findById(id);
-        return ResponseEntity.ok(conta.orElseThrow());
+        Conta conta = service.findById(id).orElse(null);
+        return ResponseEntity.ok(conta);
     }
 
     @DeleteMapping("/{id}")
@@ -48,43 +48,25 @@ public class ContaController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<ContaResponse> updateConta(@PathVariable Long id, @RequestBody ContaResponse contaResponse) {
+    public ResponseEntity<Conta> patch(@PathVariable Long id, @RequestBody ContaResponse contaResponse) {
 
-        Conta conta = service.findById(id).orElse(null);
+        Conta conta = service.patch(id, contaResponse);
 
         if (conta != null) {
-
-            if (contaResponse.nome().isEmpty()) conta.setNome(contaResponse.nome());
-            if (contaResponse.saldo() != null) conta.setSaldo(contaResponse.saldo());
-            if (contaResponse.divida() != null) conta.setDivida(contaResponse.divida());
-            if (contaResponse.email().isEmpty()) conta.setEmail(contaResponse.email());
-
-            service.save(conta);
-
-            return ResponseEntity.ok(contaResponse);
+            return ResponseEntity.ok(conta);
         }
 
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ContaResponse> put(@PathVariable Long id, @RequestBody ContaResponse contaResponse) {
+    public ResponseEntity<Conta> put(@PathVariable Long id, @RequestBody ContaResponse contaResponse) {
 
-        Conta conta = service.findById(id).orElse(null);
+        ContaUtils utils = new ContaUtils();
+        if (utils.putValido(contaResponse)) return ResponseEntity.notFound().build();
 
-        if (conta != null && !contaResponse.nome().isEmpty() && contaResponse.saldo() != null && contaResponse.divida() != null &&
-                !contaResponse.email().isEmpty()) {
-
-            conta.setNome(contaResponse.nome());
-            conta.setSaldo(contaResponse.saldo());
-            conta.setDivida(contaResponse.divida());
-            conta.setEmail(contaResponse.email());
-
-            service.save(conta);
-            return ResponseEntity.ok(contaResponse);
-        }
-
-        return ResponseEntity.notFound().build();
+        Conta conta = service.put(id, contaResponse);
+        return ResponseEntity.ok(conta);
     }
 
 }

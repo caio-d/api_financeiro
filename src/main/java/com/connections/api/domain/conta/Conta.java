@@ -7,13 +7,12 @@ import lombok.*;
 @Entity(name = "conta")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "conta_id")
+@EqualsAndHashCode(of = "id")
 public class Conta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long conta_id;
+    private Long id;
     private String nome;
     private Double saldo;
     private Double divida;

@@ -52,7 +52,7 @@ public class CarteiraController {
 
         if (carteira != null) {
 
-            if (carteiraResponse.nome().isEmpty()) carteira.setNome(carteiraResponse.nome());
+            if (carteiraResponse.nome() != null) carteira.setNome(carteiraResponse.nome());
             if (carteiraResponse.saldo() != null) carteira.setSaldo(carteiraResponse.saldo());
             if (carteiraResponse.divida() != null) carteira.setDivida(carteiraResponse.divida());
             if (carteiraResponse.vencimento() != null) carteira.setVencimento(carteiraResponse.vencimento());

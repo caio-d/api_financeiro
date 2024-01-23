@@ -8,14 +8,13 @@ import java.time.LocalDate;
 @Entity(name = "carteira")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "carteira_id")
+@EqualsAndHashCode(of = "id")
 public class Carteira {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long carteira_id;
-    @NonNull
+    private Long id;
+
     private Long conta_id;
     private String nome;
     private Double saldo;
