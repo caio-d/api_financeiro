@@ -3,6 +3,7 @@ package com.connections.api.controllers;
 import com.connections.api.domain.carteira.Carteira;
 import com.connections.api.domain.carteira.CarteiraResponse;
 import com.connections.api.services.CarteiraService;
+import com.connections.api.utils.CarteiraUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +24,14 @@ public class CarteiraController {
     }
 
     @PostMapping
-    public ResponseEntity<CarteiraResponse> insert(@RequestBody CarteiraResponse carteiraResponse) {
-        service.save(new Carteira(carteiraResponse));
-        return ResponseEntity.ok().body(carteiraResponse);
+    public ResponseEntity<Carteira> insert(@RequestBody CarteiraResponse carteiraResponse) {
+        Carteira carteira = new Carteira(carteiraResponse);
+        service.save(carteira);
+        return ResponseEntity.ok().body(carteira);
     }
 
     @GetMapping
-    public ResponseEntity<List<CarteiraResponse>> getAll() {
+    public ResponseEntity<List<Carteira>> getAll() {
         return ResponseEntity.ok().body(service.getAll());
     }
 
@@ -40,51 +42,31 @@ public class CarteiraController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CarteiraResponse> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Carteira> deleteById(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<CarteiraResponse> patch(@PathVariable Long id, @RequestBody CarteiraResponse carteiraResponse) {
+    public ResponseEntity<Carteira> patch(@PathVariable Long id, @RequestBody CarteiraResponse carteiraResponse) {
 
-        Carteira carteira = service.findById(id).orElse(null);
+        Carteira carteira = service.patch(id, carteiraResponse);
 
         if (carteira != null) {
-
-            if (carteiraResponse.nome() != null) carteira.setNome(carteiraResponse.nome());
-            if (carteiraResponse.saldo() != null) carteira.setSaldo(carteiraResponse.saldo());
-            if (carteiraResponse.divida() != null) carteira.setDivida(carteiraResponse.divida());
-            if (carteiraResponse.vencimento() != null) carteira.setVencimento(carteiraResponse.vencimento());
-            if (carteiraResponse.meses_restantes() != null) carteira.setMeses_restantes(carteiraResponse.meses_restantes());
-
-            service.save(carteira);
-
-            return ResponseEntity.ok(carteiraResponse);
+            return ResponseEntity.ok(carteira);
         }
 
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<CarteiraResponse> put(@PathVariable Long id, @RequestBody CarteiraResponse carteiraResponse) {
+    public ResponseEntity<Carteira> put(@PathVariable Long id, @RequestBody CarteiraResponse carteiraResponse) {
 
-        Carteira carteira = service.findById(id).orElse(null);
+        CarteiraUtils utils = new CarteiraUtils();
+        if (utils.putInvalido(carteiraResponse)) return ResponseEntity.notFound().build();
 
-            if (carteira != null && !carteiraResponse.nome().isEmpty() && carteiraResponse.saldo() != null && carteiraResponse.divida() != null &&
-                    carteiraResponse.vencimento() != null && carteiraResponse.meses_restantes() != null) {
-
-                carteira.setNome(carteiraResponse.nome());
-                carteira.setSaldo(carteiraResponse.saldo());
-                carteira.setDivida(carteiraResponse.divida());
-                carteira.setVencimento(carteiraResponse.vencimento());
-                carteira.setMeses_restantes(carteiraResponse.meses_restantes());
-
-                service.save(carteira);
-                return ResponseEntity.ok(carteiraResponse);
-            }
-
-        return ResponseEntity.notFound().build();
+        Carteira carteira = service.put(id, carteiraResponse);
+        return ResponseEntity.ok(carteira);
     }
 
 }

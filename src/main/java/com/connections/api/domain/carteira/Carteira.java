@@ -1,7 +1,11 @@
 package com.connections.api.domain.carteira;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Table(name = "tb_carteira")
@@ -12,9 +16,9 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = "id")
 public class Carteira {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long conta_id;
     private String nome;
     private Double saldo;

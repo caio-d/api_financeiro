@@ -63,7 +63,7 @@ public class ContaController {
     public ResponseEntity<Conta> put(@PathVariable Long id, @RequestBody ContaResponse contaResponse) {
 
         ContaUtils utils = new ContaUtils();
-        if (utils.putValido(contaResponse)) return ResponseEntity.notFound().build();
+        if (utils.putInvalido(contaResponse)) return ResponseEntity.notFound().build();
 
         Conta conta = service.put(id, contaResponse);
         return ResponseEntity.ok(conta);
