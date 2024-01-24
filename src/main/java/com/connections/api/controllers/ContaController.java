@@ -19,8 +19,8 @@ public class ContaController {
     private final ContaService service;
 
     @Autowired
-    public ContaController(ContaService repository) {
-        this.service = repository;
+    public ContaController(ContaService contaService) {
+        this.service = contaService;
     }
 
     @PostMapping
